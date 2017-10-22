@@ -1,3 +1,5 @@
+from random import randint
+
 X = ' X '
 O = ' O '
 BLANK = '   '
@@ -9,7 +11,7 @@ class Board():
         self.__board = [[BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK]]
-        self.__player_turn = 0
+        self.__player_turn = BLANK
         self.__number_of_turns = 0
 
     def __str__(self):
@@ -20,7 +22,7 @@ class Board():
         board_string += "------------\n"
         return board_string
 
-    def set_board_position(self, row, column, player):
+    def set_board_position(self, row, column):
         '''
         Set player token on board position
         @param str player: X or O - which player to set
@@ -31,10 +33,21 @@ class Board():
         '''
         if self.__board[row][column] != BLANK:
             return False
-        self.__board[row][column] = player
+        self.__board[row][column] = self.__player_turn
+        self.__player_turn = [X, O][self.__player_turn == O]
+        print('IN SET BOARDPOSITION %s' % self.__player_turn)
         self.__number_of_turns += 1
         self.determine_win()
         return True
+
+    def reset_board(self):
+        print("RESTARTING BOARD")
+        self.__board = [[BLANK, BLANK, BLANK],
+                        [BLANK, BLANK, BLANK],
+                        [BLANK, BLANK, BLANK]]
+        self.__number_of_turns = 0
+        self.__player_turn = [X, O][randint(0, 1)]
+        print("Players turn is now %s" % self.__player_turn)
 
     def determine_win(self):
         '''
