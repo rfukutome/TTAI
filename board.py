@@ -11,8 +11,8 @@ class Board():
         self.__board = [[BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK]]
-        self.__player_turn = BLANK
         self.__number_of_turns = 0
+        self.__player_turn = [X, O][randint(0, 1)]
 
     def __str__(self):
         board_string = ""
@@ -32,21 +32,30 @@ class Board():
         @rtype: None
         '''
         if self.__board[row][column] != BLANK:
+            print('Board Position already taken, please choose valid position')
             return False
         self.__board[row][column] = self.__player_turn
-        self.__player_turn = [X, O][self.__player_turn == O]
         print('IN SET BOARDPOSITION %s' % self.__player_turn)
+        self.__player_turn = X if self.__player_turn == O else O
         self.__number_of_turns += 1
-        self.determine_win()
+        if self.determine_win() != BLANK:
+            print("WINNER IS %s"% self.determine_win())
+            self.reset_board()
         return True
 
     def reset_board(self):
-        print("RESTARTING BOARD")
+        '''
+        Resets the board for a new round of tic tac toe
+        @return: None
+        @rtype: None
+        '''
         self.__board = [[BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK]]
         self.__number_of_turns = 0
         self.__player_turn = [X, O][randint(0, 1)]
+
+        #@TODO Add in reseting of GUI elements here.
         print("Players turn is now %s" % self.__player_turn)
 
     def determine_win(self):
@@ -71,10 +80,13 @@ class Board():
             return BLANK
 
         # Remaining diagonal win conditions
-        if self.__game_board[0][0] == self.__game_board[1][1] == self.__game_board[2][2]:
-            return self.__game_board[0][0]
+        if self.__board[0][0] == self.__board[1][1] == self.__board[2][2]:
+            return self.__board[0][0]
 
-        if self.__game_board[0][2] == self.__game_board[1][1] == self.__game_board[2][0]:
-            return self.__game_board[0][2]
+        if self.__board[0][2] == self.__board[1][1] == self.__board[2][0]:
+            return self.__board[0][2]
 
         return BLANK
+
+    def get_player_turn(self):
+        return self.__player_turn
