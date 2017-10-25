@@ -3,7 +3,8 @@ from random import randint
 X = ' X '
 O = ' O '
 BLANK = '   '
-
+CATS_GAME = 'CG'
+MAX_NUMBER_OF_TURNS = 9
 MIN_MOVES_FOR_WIN = 5
 
 class Board():
@@ -38,9 +39,6 @@ class Board():
         print('IN SET BOARDPOSITION %s' % self.__player_turn)
         self.__player_turn = X if self.__player_turn == O else O
         self.__number_of_turns += 1
-        if self.determine_win() != BLANK:
-            print("WINNER IS %s"% self.determine_win())
-            self.reset_board()
         return True
 
     def reset_board(self):
@@ -85,6 +83,9 @@ class Board():
 
         if self.__board[0][2] == self.__board[1][1] == self.__board[2][0]:
             return self.__board[0][2]
+
+        if self.__number_of_turns == MAX_NUMBER_OF_TURNS:
+            return CATS_GAME
 
         return BLANK
 
