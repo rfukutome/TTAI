@@ -1,7 +1,10 @@
+from random import randint
+
 X = ' X '
 O = ' O '
 BLANK = '   '
-
+CATS_GAME = 'CG'
+MAX_NUMBER_OF_TURNS = 9
 MIN_MOVES_FOR_WIN = 5
 
 class Board():
@@ -9,8 +12,8 @@ class Board():
         self.__board = [[BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK],
                         [BLANK, BLANK, BLANK]]
-        self.__player_turn = 0
         self.__number_of_turns = 0
+        self.__player_turn = [X, O][randint(0, 1)]
 
     def __str__(self):
         board_string = ""
@@ -20,7 +23,7 @@ class Board():
         board_string += "------------\n"
         return board_string
 
-    def set_board_position(self, row, column, player):
+    def set_board_position(self, row, column):
         '''
         Set player token on board position
         @param str player: X or O - which player to set
@@ -30,11 +33,25 @@ class Board():
         @rtype: None
         '''
         if self.__board[row][column] != BLANK:
+            print('Board Position already taken, please choose valid position')
             return False
-        self.__board[row][column] = player
+        self.__board[row][column] = self.__player_turn
+        print('IN SET BOARDPOSITION %s' % self.__player_turn)
+        self.__player_turn = X if self.__player_turn == O else O
         self.__number_of_turns += 1
-        self.determine_win()
         return True
+
+    def reset_board(self):
+        '''
+        Resets the board for a new round of tic tac toe
+        @return: None
+        @rtype: None
+        '''
+        self.__board = [[BLANK, BLANK, BLANK],
+                        [BLANK, BLANK, BLANK],
+                        [BLANK, BLANK, BLANK]]
+        self.__number_of_turns = 0
+        self.__player_turn = [X, O][randint(0, 1)]
 
     def determine_win(self):
         '''
@@ -58,10 +75,16 @@ class Board():
             return BLANK
 
         # Remaining diagonal win conditions
-        if self.__game_board[0][0] == self.__game_board[1][1] == self.__game_board[2][2]:
-            return self.__game_board[0][0]
+        if self.__board[0][0] == self.__board[1][1] == self.__board[2][2]:
+            return self.__board[0][0]
 
-        if self.__game_board[0][2] == self.__game_board[1][1] == self.__game_board[2][0]:
-            return self.__game_board[0][2]
+        if self.__board[0][2] == self.__board[1][1] == self.__board[2][0]:
+            return self.__board[0][2]
+
+        if self.__number_of_turns == MAX_NUMBER_OF_TURNS:
+            return CATS_GAME
 
         return BLANK
+
+    def get_player_turn(self):
+        return self.__player_turn
