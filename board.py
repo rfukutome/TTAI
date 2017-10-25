@@ -53,9 +53,6 @@ class Board():
         self.__number_of_turns = 0
         self.__player_turn = [X, O][randint(0, 1)]
 
-        #@TODO Add in reseting of GUI elements here.
-        print("Players turn is now %s" % self.__player_turn)
-
     def determine_win(self):
         '''
         Determine if a player has won.
